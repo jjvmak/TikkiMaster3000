@@ -1,0 +1,278 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class Gameboard {
+
+	Player player = new Player();
+	Enemy enemy = new Enemy();
+	Deck deck = new Deck();
+
+	boolean isPlayersTurn = true;
+	boolean playerCorrectInput;
+	boolean isEnemyGiving = true; // true giving false taking
+	boolean waitForBothCard = true;
+	boolean isEnemyCardOnTable = false;
+
+	int playerScore = 0;
+	int enemyScore = 0;
+	int roundNumber = 0;
+	int turnNumber = 0;
+	int cardsOnTheTable = 0;
+	
+	
+	Card playerCardOnTable;
+	Card enemyCardOnTable;
+
+	Scanner scn = new Scanner(System.in);
+
+
+
+	public void gameLoop() {
+
+		initDeck();
+		dealCards();
+		randomStart();
+		
+		//player.sort(player.hand);
+		//enemy.sort(enemy.hand);
+
+		while (deck.isPlayable()) {
+			
+			
+			System.out.println("Cards on the table: "+cardsOnTheTable);
+			
+			while (cardsOnTheTable < 2) {
+				
+				System.out.println("Cards on the table: "+cardsOnTheTable+" (second whileloop)");
+				
+				if (isPlayersTurn) {
+					
+					System.out.println("Players turn!");
+					System.out.println("Enemy cards: "+enemy.toString());
+					System.out.println("Your cards: "+player.toString());
+					System.out.println("---------------------------------------------------------------------------------------");
+					
+					if (!isEnemyGiving) {
+						System.out.println("You are giving! Enemy card on table: "+ enemyCardOnTable);
+						System.out.println("---------------------------------------------------------------------------------------");
+					}
+					
+					String playedCard = scn.nextLine();
+					checkPlayerInput(playedCard);
+					
+					if(playerCorrectInput) {
+						System.out.println(playerCardOnTable);
+						System.out.println("---------------------------------------------------------------------------------------");
+						isPlayersTurn = false;
+						cardsOnTheTable++;
+					}
+					
+					else {
+						System.out.println("Incorrect input! Try again.");
+						System.out.println("---------------------------------------------------------------------------------------");
+					}
+				}
+
+				if (!isPlayersTurn && !isEnemyCardOnTable) {
+
+					if (!isEnemyGiving) {
+						System.out.println("Enemy is taking!");
+						enemyCardOnTable = enemy.playCardTaking();
+						System.out.println("enemy card: " + enemyCardOnTable);
+						System.out.println("---------------------------------------------------------------------------------------");
+						isPlayersTurn = true;
+						isEnemyCardOnTable = true;
+						cardsOnTheTable++;
+					}
+
+					if (isEnemyGiving) {
+						System.out.println("Enemy is giving!");
+						enemyCardOnTable = enemy.playCardGivin(playerCardOnTable);
+						System.out.println("enemy card: " + enemyCardOnTable);
+						System.out.println("---------------------------------------------------------------------------------------");
+						cardsOnTheTable++;
+						isEnemyCardOnTable = true;
+					}
+
+				}
+			}
+			
+			
+			
+			evaluateTurn(enemyCardOnTable, playerCardOnTable);
+		
+		}
+	}
+
+	public void initDeck() {
+		deck.initDeck();
+		deck.shuffleDeck();
+	}
+
+	public void dealCards() {
+		
+		for (int j = 0; j < 5; j++) {
+			enemy.addToHand(deck.dealCard());
+			
+		}
+		
+		enemy.initLeftInDeck(deck);
+		
+		for (int i = 0; i < 5; i++) {
+			player.addToHand(deck.dealCard());
+		}
+	}
+	
+	public void randomStart() {
+		Random rnd = new Random();
+		int randomed = rnd.nextInt(100)+1;
+		if(randomed % 2 == 0){
+			isPlayersTurn = true;
+			isEnemyGiving = true;
+		}
+		else {
+			isPlayersTurn = false;
+			isEnemyGiving = false;
+		}
+			
+		
+	}
+
+	public void checkPlayerInput(String inp) {
+
+		String suit = inp.substring(0,1);
+		int number;
+
+		try {
+			number = Integer.parseInt(inp.substring(1));
+		} catch (Exception e) {
+			number = -1;
+		}
+
+		Suit eSuit = null;
+		boolean isInit = false;
+		
+		switch (suit) {
+
+		case "s":
+			eSuit = Suit.SPADE;
+			isInit = true;
+			break;
+
+		case "c":
+			eSuit = Suit.CLUB;
+			isInit = true;
+			break;
+
+		case "d":
+			eSuit = Suit.DIAMOND;
+			isInit = true;
+			break;
+
+		case "h":
+			eSuit = Suit.HEART;
+			isInit = true;
+			break;
+
+		default:
+			break;
+		}
+
+		Card tempCard = new Card(number, eSuit);
+
+		if (isInit && number > 0 && number < 14 && player.isInHand(tempCard)) {
+			playerCorrectInput = true;
+			playerCardOnTable = new Card(number, eSuit);
+			player.removeCard(playerCardOnTable);
+		}
+		
+		else {
+			playerCorrectInput = false;
+		}
+	}
+
+	public void evaluateTurn(Card enemyCard, Card playerCard) {
+		
+		turnNumber++;
+		isEnemyCardOnTable = false;
+		System.out.println("Evaluating turn number: "+turnNumber+".................................................");
+		System.out.println("Enemy calculating cards................................................................");
+		enemy.removeFromLeftInDeck(playerCard);
+		System.out.println("You played: "+playerCard+" Enemy played: "+enemyCard);
+		System.out.println("---------------------------------------------------------------------------------------");
+		
+		
+		if (isEnemyGiving) {
+			if (enemyCard.getSuit() == playerCard.getSuit()) {
+				if (enemyCard.getValue() > playerCard.getValue()) {
+					isPlayersTurn = false;
+					isEnemyGiving = false;
+					System.out.println("Enemy wins turn!");
+					System.out.println("---------------------------------------------------------------------------------------");
+					cardsOnTheTable = 0;
+				}
+				else {
+					isPlayersTurn = true;
+					isEnemyGiving = true;
+					System.out.println("You win turn!");
+					System.out.println("---------------------------------------------------------------------------------------");
+					cardsOnTheTable = 0;
+				}
+			}
+			else {
+				isPlayersTurn = true;
+				isEnemyGiving = true;
+				System.out.println("You win turn!");
+				System.out.println("---------------------------------------------------------------------------------------");
+				cardsOnTheTable = 0;
+			}
+		}
+
+		else {
+			if (enemyCard.getSuit() == playerCard.getSuit()) {
+				if (enemyCard.getValue() < playerCard.getValue()) {
+					isPlayersTurn = true;
+					isEnemyGiving = true;
+					System.out.println("You win turn!");
+					System.out.println("---------------------------------------------------------------------------------------");
+					cardsOnTheTable = 0;
+				}
+				else {
+					isPlayersTurn = false;
+					isEnemyGiving = false;
+					System.out.println("Enemy wins turn!");
+					System.out.println("---------------------------------------------------------------------------------------");
+					cardsOnTheTable = 0;
+				}
+			}
+			else {
+				isPlayersTurn = false;
+				isEnemyGiving = false;
+				System.out.println("Enemy wins turn!");
+				System.out.println("---------------------------------------------------------------------------------------");
+				cardsOnTheTable = 0;
+			}
+		}
+		
+		if (turnNumber == 5) {
+			
+			if(isPlayersTurn) {
+				playerScore++;
+				turnNumber = 0;
+				System.out.println("PLAYER WINS!");
+				System.out.println("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
+				System.out.println("---------------------------------------------------------------------------------------");
+				dealCards();
+			}
+			
+			else {
+				enemyScore++;
+				turnNumber = 0;
+				System.out.println("ENEMY WINS!");
+				System.out.println("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
+				System.out.println("---------------------------------------------------------------------------------------");
+				dealCards();
+			}
+		}
+	}
+}
