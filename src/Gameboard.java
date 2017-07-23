@@ -3,24 +3,28 @@ import java.util.Scanner;
 
 public class Gameboard {
 
-	Player player = new Player();
+	GUI gui = new GUI();
+	
+	static Player player = new Player();
 	Enemy enemy = new Enemy();
 	Deck deck = new Deck();
 
-	boolean isPlayersTurn = true;
+	static boolean isPlayersTurn = true;
 	boolean playerCorrectInput;
 	boolean isEnemyGiving = true; // true giving false taking
 	boolean waitForBothCard = true;
 	boolean isEnemyCardOnTable = false;
+	static boolean waiting = true;
+	boolean shouldRender;
 
 	int playerScore = 0;
 	int enemyScore = 0;
 	int roundNumber = 0;
 	int turnNumber = 0;
-	int cardsOnTheTable = 0;
+	static int cardsOnTheTable = 0;
 	
 	
-	Card playerCardOnTable;
+	static Card playerCardOnTable;
 	Card enemyCardOnTable;
 
 	Scanner scn = new Scanner(System.in);
@@ -28,43 +32,57 @@ public class Gameboard {
 
 
 	public void gameLoop() {
-
+		
 		initDeck();
 		dealCards();
 		randomStart();
+		gui = new GUI();
+		setGuiPlayerHand();
+		setCardsToGui();
 		
 		//player.sort(player.hand);
 		//enemy.sort(enemy.hand);
 
 		while (deck.isPlayable()) {
 			
+			if (!shouldRender) {
+				//setCardsToGui();
+				
+				shouldRender = true;
+			}
 			
 			System.out.println("Cards on the table: "+cardsOnTheTable);
+			
 			
 			while (cardsOnTheTable < 2) {
 				
 				System.out.println("Cards on the table: "+cardsOnTheTable+" (second whileloop)");
 				
+				
 				if (isPlayersTurn) {
 					
 					System.out.println("Players turn!");
+					gui.appendText("\n Players turn!");
 					System.out.println("Enemy cards: "+enemy.toString());
 					System.out.println("Your cards: "+player.toString());
 					System.out.println("---------------------------------------------------------------------------------------");
 					
 					if (!isEnemyGiving) {
 						System.out.println("You are giving! Enemy card on table: "+ enemyCardOnTable);
+						gui.appendText("\n You are giving! Enemy card on table: "+ enemyCardOnTable);
 						System.out.println("---------------------------------------------------------------------------------------");
 					}
+					waitForPlayerCard();
+					//String playedCard = scn.nextLine();
+					//checkPlayerInput(playedCard);
 					
-					String playedCard = scn.nextLine();
-					checkPlayerInput(playedCard);
-					
-					if(playerCorrectInput) {
+					if(!waiting) {
 						System.out.println(playerCardOnTable);
 						System.out.println("---------------------------------------------------------------------------------------");
 						isPlayersTurn = false;
 						cardsOnTheTable++;
+						waiting = true;
+						System.out.println("AXAXAXAXAXAXAXAXAXAXA "+gui.playerHand);
 					}
 					
 					else {
@@ -77,8 +95,10 @@ public class Gameboard {
 
 					if (!isEnemyGiving) {
 						System.out.println("Enemy is taking!");
+						gui.appendText("\n Enemy is taking!");
 						enemyCardOnTable = enemy.playCardTaking();
 						System.out.println("enemy card: " + enemyCardOnTable);
+						gui.appendText("\n enemy card: " + enemyCardOnTable);
 						System.out.println("---------------------------------------------------------------------------------------");
 						isPlayersTurn = true;
 						isEnemyCardOnTable = true;
@@ -87,8 +107,10 @@ public class Gameboard {
 
 					if (isEnemyGiving) {
 						System.out.println("Enemy is giving!");
+						gui.appendText("\n Enemy is giving!");
 						enemyCardOnTable = enemy.playCardGivin(playerCardOnTable);
 						System.out.println("enemy card: " + enemyCardOnTable);
+						gui.appendText("\n Enemy card: " + enemyCardOnTable);
 						System.out.println("---------------------------------------------------------------------------------------");
 						cardsOnTheTable++;
 						isEnemyCardOnTable = true;
@@ -121,6 +143,8 @@ public class Gameboard {
 		for (int i = 0; i < 5; i++) {
 			player.addToHand(deck.dealCard());
 		}
+		
+		
 	}
 	
 	public void randomStart() {
@@ -196,9 +220,11 @@ public class Gameboard {
 		turnNumber++;
 		isEnemyCardOnTable = false;
 		System.out.println("Evaluating turn number: "+turnNumber+".................................................");
+		gui.appendText("\n Evaluating turn number: "+turnNumber);
 		System.out.println("Enemy calculating cards................................................................");
 		enemy.removeFromLeftInDeck(playerCard);
 		System.out.println("You played: "+playerCard+" Enemy played: "+enemyCard);
+		gui.appendText("\n You played: "+playerCard+" Enemy played: "+enemyCard);
 		System.out.println("---------------------------------------------------------------------------------------");
 		
 		
@@ -208,6 +234,7 @@ public class Gameboard {
 					isPlayersTurn = false;
 					isEnemyGiving = false;
 					System.out.println("Enemy wins turn!");
+					gui.appendText("\n Enemy wins turn!");
 					System.out.println("---------------------------------------------------------------------------------------");
 					cardsOnTheTable = 0;
 				}
@@ -215,6 +242,7 @@ public class Gameboard {
 					isPlayersTurn = true;
 					isEnemyGiving = true;
 					System.out.println("You win turn!");
+					gui.appendText("\n You win turn!");
 					System.out.println("---------------------------------------------------------------------------------------");
 					cardsOnTheTable = 0;
 				}
@@ -223,6 +251,7 @@ public class Gameboard {
 				isPlayersTurn = true;
 				isEnemyGiving = true;
 				System.out.println("You win turn!");
+				gui.appendText("\n You win turn!");
 				System.out.println("---------------------------------------------------------------------------------------");
 				cardsOnTheTable = 0;
 			}
@@ -234,6 +263,7 @@ public class Gameboard {
 					isPlayersTurn = true;
 					isEnemyGiving = true;
 					System.out.println("You win turn!");
+					gui.appendText("\n You win turn!");
 					System.out.println("---------------------------------------------------------------------------------------");
 					cardsOnTheTable = 0;
 				}
@@ -241,6 +271,7 @@ public class Gameboard {
 					isPlayersTurn = false;
 					isEnemyGiving = false;
 					System.out.println("Enemy wins turn!");
+					gui.appendText("\n Enemy wins turn!");
 					System.out.println("---------------------------------------------------------------------------------------");
 					cardsOnTheTable = 0;
 				}
@@ -249,6 +280,8 @@ public class Gameboard {
 				isPlayersTurn = false;
 				isEnemyGiving = false;
 				System.out.println("Enemy wins turn!");
+				gui.appendText("\n Enemy wins turn!");
+				
 				System.out.println("---------------------------------------------------------------------------------------");
 				cardsOnTheTable = 0;
 			}
@@ -260,19 +293,65 @@ public class Gameboard {
 				playerScore++;
 				turnNumber = 0;
 				System.out.println("PLAYER WINS!");
+				gui.appendText("\n PLAYER WINS!");
 				System.out.println("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
+				gui.appendText("\n PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 				System.out.println("---------------------------------------------------------------------------------------");
 				dealCards();
+				setCardsToGui();
+				setGuiPlayerHand();
+				gui.setAllActive();
 			}
 			
 			else {
 				enemyScore++;
 				turnNumber = 0;
 				System.out.println("ENEMY WINS!");
+				gui.appendText("\n ENEMY WINS!");
 				System.out.println("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
+				gui.appendText("\n PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 				System.out.println("---------------------------------------------------------------------------------------");
 				dealCards();
+				setCardsToGui();
+				setGuiPlayerHand();
+				gui.setAllActive();
+			}
+		}
+		
+		
+	}
+	
+	public void setCardsToGui() {
+		gui.setCardNames(player.hand);
+	}
+	
+	public static void playCard(Card card) {
+		//System.out.println("FAST");
+		isPlayersTurn = false;
+		cardsOnTheTable++;
+		playerCardOnTable = card;
+		player.removeCard(playerCardOnTable);
+		waiting = false;
+	}
+	
+	public void waitForPlayerCard() {
+		
+		System.out.println("waiting for card");
+		while (waiting) {
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
+	
+	public void setGuiPlayerHand() {
+		gui.playerHand.removeAll(gui.playerHand);
+		for  (int i = 0; i < player.hand.size(); i++ ) {
+			gui.setPlayerHand(player.hand.get(i));
+		}
+	}
+	
 }
