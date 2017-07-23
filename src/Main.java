@@ -4,6 +4,7 @@
 /* 
  * TODO:
  * 
+ * 
  * - Enemy card counting abilities (make it brutal as :D)
  * - Cleanup console logs
  * - Better user input
