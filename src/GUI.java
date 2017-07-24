@@ -140,7 +140,7 @@ public class GUI {
 			}
 		});
 		
-		scrollPane.setBounds(284, 11, 400, 261);
+		scrollPane.setBounds(276, 11, 408, 261);
 
 		panel.add(scrollPane);
 
@@ -150,7 +150,7 @@ public class GUI {
 		
 		JPanel table = new JPanel();
 		table.setBackground(new Color(0, 100, 0));
-		table.setBounds(0, 11, 270, 261);
+		table.setBounds(0, 11, 266, 261);
 		panel.add(table);
 		table.setLayout(null);
 		
@@ -236,7 +236,7 @@ public class GUI {
 
 	public void appendText(String s) {
 		
-		textPane.append(s);
+		textPane.setText(s);
 
 	}
 	
