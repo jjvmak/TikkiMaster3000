@@ -7,7 +7,7 @@ public class Deck {
 	
 	public void initDeck() {
 		
-		for (int i = 1; i < 14; i++) {
+		for (int i = 2; i < 15; i++) {
 			deck.add(new Card(i, Suit.HEART));
 			deck.add(new Card(i, Suit.CLUB));
 			deck.add(new Card(i, Suit.DIAMOND));

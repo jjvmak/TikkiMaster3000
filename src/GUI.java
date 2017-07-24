@@ -2,6 +2,7 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -9,8 +10,12 @@ import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
+
+import com.sun.javafx.PlatformUtil;
+
 import javax.swing.JScrollPane;
 import java.awt.Color;
+import javax.swing.JLabel;
 
 public class GUI {
 	
@@ -30,6 +35,10 @@ public class GUI {
 	ArrayList<Card> playerHand = new ArrayList<>();
 	private JScrollPane scrollPane;
 	JScrollBar vertical;
+	JPanel enemyCardPane;
+	JLabel enemyCardLabel;
+	JLabel playerCardLabel; 
+	JPanel playerCardPane;
 
 	/**
 	 * Create the application.
@@ -66,9 +75,10 @@ public class GUI {
 			public void actionPerformed(ActionEvent arg0) {
 				Gameboard.playCard(playerHand.get(0));
 				card1.setEnabled(false);
+				setPlayerCardLabel(playerHand.get(0));
 			}
 		});
-		card1.setBounds(0, 300, 130, 65);
+		card1.setBounds(0, 283, 59, 79);
 		panel.add(card1);
 
 		card2 = new JButton("");
@@ -76,9 +86,10 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				Gameboard.playCard(playerHand.get(1));
 				card2.setEnabled(false);
+				setPlayerCardLabel(playerHand.get(1));
 			}
 		});
-		card2.setBounds(140, 300, 130, 65);
+		card2.setBounds(69, 283, 59, 79);
 		panel.add(card2);
 
 		card3 = new JButton();
@@ -88,9 +99,10 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				Gameboard.playCard(playerHand.get(2));
 				card3.setEnabled(false);
+				setPlayerCardLabel(playerHand.get(2));
 			}
 		});
-		card3.setBounds(280, 300, 130, 65);
+		card3.setBounds(138, 283, 59, 79);
 		panel.add(card3);
 
 		card4 = new JButton("");
@@ -98,9 +110,10 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				Gameboard.playCard(playerHand.get(3));
 				card4.setEnabled(false);
+				setPlayerCardLabel(playerHand.get(3));
 			}
 		});
-		card4.setBounds(420, 300, 130, 65);
+		card4.setBounds(207, 283, 59, 79);
 		panel.add(card4);
 
 		card5 = new JButton("");
@@ -108,9 +121,10 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				Gameboard.playCard(playerHand.get(4));
 				card5.setEnabled(false);
+				setPlayerCardLabel(playerHand.get(4));
 			}
 		});
-		card5.setBounds(560, 300, 130, 65);
+		card5.setBounds(276, 283, 59, 79);
 		panel.add(card5);
 
 		scrollPane = new JScrollPane();
@@ -136,14 +150,25 @@ public class GUI {
 		panel.add(table);
 		table.setLayout(null);
 		
-		JPanel enemyCardPane = new JPanel();
+		enemyCardPane = new JPanel();
 		
 		enemyCardPane.setBounds(100, 11, 59, 79);
 		table.add(enemyCardPane);
+		enemyCardPane.setLayout(null);
 		
-		JPanel playerCardPane = new JPanel();
+		enemyCardLabel = new JLabel();
+		enemyCardLabel.setBounds(0, 0, 59, 79);
+		enemyCardPane.add(enemyCardLabel);
+		
+		playerCardPane = new JPanel();
 		playerCardPane.setBounds(100, 171, 59, 79);
 		table.add(playerCardPane);
+		playerCardPane.setLayout(null);
+		
+		playerCardLabel =  new JLabel();
+		playerCardLabel.setBounds(0, 0, 59, 79);
+		playerCardPane.add(playerCardLabel);
+		
 		
 		
 
@@ -153,8 +178,13 @@ public class GUI {
 
 	public void setCardNames(ArrayList<Card> cards) {
 		for (int i = 0; i < cards.size(); i++) {
-			String name = cards.get(i).toString();
-			cardButtons.get(i).setText(name);
+			//String name = cards.get(i).toString();
+			//cardButtons.get(i).setText(name);
+			
+			String suit =cards.get(i).getSuit().toString().toLowerCase();
+			int value = cards.get(i).getValue();
+			String parsed = value + "_of_" + suit+"s.png";
+			cardButtons.get(i).setIcon(imageHandler.getImage(parsed));
 			
 
 		}
@@ -182,5 +212,20 @@ public class GUI {
 		textPane.append(s);
 
 	}
-
+	
+	public void setPlayerCardLabel(Card card) {
+		
+		String suit = card.getSuit().toString().toLowerCase();
+		int value = card.getValue();
+		String parsed = value + "_of_" + suit+"s.png";
+		playerCardLabel.setIcon(imageHandler.getImage(parsed));
+		
+	}
+	
+	public void setEnemyCardLabel(Card card) {
+		String suit = card.getSuit().toString().toLowerCase();
+		int value = card.getValue();
+		String parsed = value + "_of_" + suit+"s.png";
+		enemyCardLabel.setIcon(imageHandler.getImage(parsed));
+	}
 }

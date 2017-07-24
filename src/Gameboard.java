@@ -97,6 +97,7 @@ public class Gameboard {
 						System.out.println("Enemy is taking!");
 						gui.appendText("\n Enemy is taking!");
 						enemyCardOnTable = enemy.playCardTaking();
+						gui.setEnemyCardLabel(enemyCardOnTable);
 						System.out.println("enemy card: " + enemyCardOnTable);
 						gui.appendText("\n enemy card: " + enemyCardOnTable);
 						System.out.println("---------------------------------------------------------------------------------------");
@@ -109,6 +110,7 @@ public class Gameboard {
 						System.out.println("Enemy is giving!");
 						gui.appendText("\n Enemy is giving!");
 						enemyCardOnTable = enemy.playCardGivin(playerCardOnTable);
+						gui.setEnemyCardLabel(enemyCardOnTable);
 						System.out.println("enemy card: " + enemyCardOnTable);
 						gui.appendText("\n Enemy card: " + enemyCardOnTable);
 						System.out.println("---------------------------------------------------------------------------------------");
