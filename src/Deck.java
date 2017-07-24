@@ -3,9 +3,13 @@ import java.util.Collections;
 
 public class Deck {
 	
+	private boolean isPlayable;
+	
 	ArrayList<Card> deck = new ArrayList<Card>();
 	
 	public void initDeck() {
+		
+		isPlayable = true;
 		
 		for (int i = 2; i < 15; i++) {
 			deck.add(new Card(i, Suit.HEART));
@@ -35,8 +39,11 @@ public class Deck {
 	}
 	
 	public boolean isPlayable() {
-		if (deck.size() >= 10) return true;
-		else return false;
+		return isPlayable;
+	}
+	
+	public void setIsPlayable(boolean set){
+		isPlayable = set;
 	}
 
 }

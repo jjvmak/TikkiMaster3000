@@ -15,7 +15,7 @@ public class Gameboard {
 	boolean waitForBothCard = true;
 	boolean isEnemyCardOnTable = false;
 	static boolean waiting = true;
-	boolean shouldRender;
+	boolean shouldPlay;
 
 	int playerScore = 0;
 	int enemyScore = 0;
@@ -40,7 +40,8 @@ public class Gameboard {
 		
 		gui.leftInTheDeck.setText("Cards left in the deck: "+deck.deck.size());
 		
-		do {
+		while (shouldPlay) {
+			setTakerLabels();
 			gui.leftInTheDeck.setText("Cards left in the deck: "+deck.deck.size());
 			
 			System.out.println("Cards on the table: "+cardsOnTheTable);
@@ -112,13 +113,14 @@ public class Gameboard {
 			}
 			
 			evaluateTurn(enemyCardOnTable, playerCardOnTable);
-			
-		} while (deck.deck.size() >= 10);
+		} 
 	}
 
 	public void initDeck() {
 		deck.initDeck();
 		deck.shuffleDeck();
+		roundNumber = 1;
+		shouldPlay = true;
 	}
 
 	public void dealCards() {
@@ -138,71 +140,30 @@ public class Gameboard {
 	public void randomStart() {
 		Random rnd = new Random();
 		int randomed = rnd.nextInt(100)+1;
+		
 		if(randomed % 2 == 0){
 			isPlayersTurn = true;
 			isEnemyGiving = true;
+			
 		}
 		else {
 			isPlayersTurn = false;
 			isEnemyGiving = false;
+			
 		}	
+		
+		
 	}
 
-	public void checkPlayerInput(String inp) {
-		//This method should be used only if GUI is not in use.
-
-		String suit = inp.substring(0,1);
-		int number;
-
-		try {
-			number = Integer.parseInt(inp.substring(1));
-		} catch (Exception e) {
-			number = -1;
-		}
-
-		Suit eSuit = null;
-		boolean isInit = false;
-		
-		switch (suit) {
-
-		case "s":
-			eSuit = Suit.SPADE;
-			isInit = true;
-			break;
-
-		case "c":
-			eSuit = Suit.CLUB;
-			isInit = true;
-			break;
-
-		case "d":
-			eSuit = Suit.DIAMOND;
-			isInit = true;
-			break;
-
-		case "h":
-			eSuit = Suit.HEART;
-			isInit = true;
-			break;
-
-		default:
-			break;
-		}
-
-		Card tempCard = new Card(number, eSuit);
-
-		if (isInit && number > 0 && number < 14 && player.isInHand(tempCard)) {
-			playerCorrectInput = true;
-			playerCardOnTable = new Card(number, eSuit);
-			player.removeCard(playerCardOnTable);
-		}
-		
-		else {
-			playerCorrectInput = false;
-		}
-	}
+	
 
 	public void evaluateTurn(Card enemyCard, Card playerCard) {
+		
+		if (roundNumber == 5) {
+			System.out.println("ASDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD_ ______________");
+			deck.setIsPlayable(false);
+			roundNumber++;
+		}
 		
 		turnNumber++;
 		isEnemyCardOnTable = false;
@@ -282,11 +243,17 @@ public class Gameboard {
 				gui.appendText("\n PLAYER WINS!");
 				System.out.println("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 				gui.appendText("\n PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
+				gui.scoreLabel.setText("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 				System.out.println("---------------------------------------------------------------------------------------");
-				dealCards();
-				setCardsToGui();
-				setGuiPlayerHand();
-				gui.setAllActive();
+				
+				if (roundNumber < 5 && deck.isPlayable()) {
+					dealCards();
+					setCardsToGui();
+					setGuiPlayerHand();
+					gui.setAllActive();
+				}
+				
+				
 			}
 			
 			else {
@@ -296,12 +263,18 @@ public class Gameboard {
 				gui.appendText("\n ENEMY WINS!");
 				System.out.println("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 				gui.appendText("\n PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
+				gui.scoreLabel.setText("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 				System.out.println("---------------------------------------------------------------------------------------");
-				dealCards();
-				setCardsToGui();
-				setGuiPlayerHand();
-				gui.setAllActive();
+				
+				if (roundNumber < 5 && deck.isPlayable()) {
+					dealCards();
+					setCardsToGui();
+					setGuiPlayerHand();
+					gui.setAllActive();
+				}
 			}
+			
+			roundNumber++;
 		}
 		
 		
@@ -311,12 +284,24 @@ public class Gameboard {
 		gui.setCardNames(player.hand);
 	}
 	
+	public void setTakerLabels() {
+		if (isEnemyGiving) {
+			gui.playerTakerLabel.setText("Taker!");
+			gui.enemyTakerLabel.setText("");
+		}
+		else {
+			gui.playerTakerLabel.setText("");
+			gui.enemyTakerLabel.setText("Taker!");
+		}
+	}
+	
 	public static void playCard(Card card) {
 		isPlayersTurn = false;
 		cardsOnTheTable++;
 		playerCardOnTable = card;
 		player.removeCard(playerCardOnTable);
 		waiting = false;
+		
 	}
 	
 	public void waitForPlayerCard() {
@@ -335,6 +320,60 @@ public class Gameboard {
 		gui.playerHand.removeAll(gui.playerHand);
 		for  (int i = 0; i < player.hand.size(); i++ ) {
 			gui.setPlayerHand(player.hand.get(i));
+		}
+	}
+	
+	public void checkPlayerInput(String inp) {
+		//This method should be used only if GUI is not in use.
+
+		String suit = inp.substring(0,1);
+		int number;
+
+		try {
+			number = Integer.parseInt(inp.substring(1));
+		} catch (Exception e) {
+			number = -1;
+		}
+
+		Suit eSuit = null;
+		boolean isInit = false;
+		
+		switch (suit) {
+
+		case "s":
+			eSuit = Suit.SPADE;
+			isInit = true;
+			break;
+
+		case "c":
+			eSuit = Suit.CLUB;
+			isInit = true;
+			break;
+
+		case "d":
+			eSuit = Suit.DIAMOND;
+			isInit = true;
+			break;
+
+		case "h":
+			eSuit = Suit.HEART;
+			isInit = true;
+			break;
+
+		default:
+			break;
+		}
+
+		Card tempCard = new Card(number, eSuit);
+
+		if (isInit && number > 0 && number < 14 && player.isInHand(tempCard)) {
+			playerCorrectInput = true;
+			playerCardOnTable = new Card(number, eSuit);
+			player.removeCard(playerCardOnTable);
+		}
+		
+		else {
+			playerCorrectInput = false;
 		}
 	}
 	

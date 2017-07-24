@@ -40,6 +40,10 @@ public class GUI {
 	JLabel playerCardLabel; 
 	JPanel playerCardPane;
 	public JLabel leftInTheDeck;
+	
+	public JLabel enemyTakerLabel;
+	public JLabel playerTakerLabel;
+	public JLabel scoreLabel;
 
 	/**
 	 * Create the application.
@@ -169,9 +173,21 @@ public class GUI {
 		playerCardLabel.setBounds(0, 0, 59, 79);
 		playerCardPane.add(playerCardLabel);
 		
+		enemyTakerLabel = new JLabel();
+		enemyTakerLabel.setBounds(169, 76, 59, 14);
+		table.add(enemyTakerLabel);
+		
+		playerTakerLabel = new JLabel();
+		playerTakerLabel.setBounds(169, 171, 46, 14);
+		table.add(playerTakerLabel);
+		
 		leftInTheDeck = new JLabel();
-		leftInTheDeck.setBounds(345, 294, 171, 20);
+		leftInTheDeck.setBounds(345, 283, 171, 20);
 		panel.add(leftInTheDeck);
+		
+		scoreLabel = new JLabel();
+		scoreLabel.setBounds(345, 348, 339, 14);
+		panel.add(scoreLabel);
 		
 	
 		
@@ -181,10 +197,16 @@ public class GUI {
 		
 		for (int i = 0; i < cards.size(); i++) {
 		
-			String suit =cards.get(i).getSuit().toString().toLowerCase();
-			int value = cards.get(i).getValue();
-			String parsed = value + "_of_" + suit+"s.png";
-			cardButtons.get(i).setIcon(imageHandler.getImage(parsed));
+			try {
+				String suit =cards.get(i).getSuit().toString().toLowerCase();
+				int value = cards.get(i).getValue();
+				String parsed = value + "_of_" + suit+"s.png";
+				cardButtons.get(i).setIcon(imageHandler.getImage(parsed));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
 			
 		}
 	}
