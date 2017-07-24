@@ -39,6 +39,7 @@ public class GUI {
 	JLabel enemyCardLabel;
 	JLabel playerCardLabel; 
 	JPanel playerCardPane;
+	public JLabel leftInTheDeck;
 
 	/**
 	 * Create the application.
@@ -167,6 +168,10 @@ public class GUI {
 		playerCardLabel =  new JLabel();
 		playerCardLabel.setBounds(0, 0, 59, 79);
 		playerCardPane.add(playerCardLabel);
+		
+		leftInTheDeck = new JLabel();
+		leftInTheDeck.setBounds(345, 294, 171, 20);
+		panel.add(leftInTheDeck);
 		
 	
 		

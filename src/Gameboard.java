@@ -37,7 +37,11 @@ public class Gameboard {
 		setGuiPlayerHand();
 		setCardsToGui();
 		gui.frame.setVisible(true);
-		while (deck.isPlayable()) {
+		
+		gui.leftInTheDeck.setText("Cards left in the deck: "+deck.deck.size());
+		
+		do {
+			gui.leftInTheDeck.setText("Cards left in the deck: "+deck.deck.size());
 			
 			System.out.println("Cards on the table: "+cardsOnTheTable);
 			
@@ -109,7 +113,7 @@ public class Gameboard {
 			
 			evaluateTurn(enemyCardOnTable, playerCardOnTable);
 			
-		}
+		} while (deck.deck.size() >= 10);
 	}
 
 	public void initDeck() {
