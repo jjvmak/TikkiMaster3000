@@ -23,13 +23,10 @@ public class Gameboard {
 	int turnNumber = 0;
 	static int cardsOnTheTable = 0;
 	
-	
 	static Card playerCardOnTable;
 	Card enemyCardOnTable;
 
 	Scanner scn = new Scanner(System.in);
-
-
 
 	public void gameLoop() {
 		
@@ -39,20 +36,10 @@ public class Gameboard {
 		gui = new GUI();
 		setGuiPlayerHand();
 		setCardsToGui();
-		
-		//player.sort(player.hand);
-		//enemy.sort(enemy.hand);
-
+		gui.frame.setVisible(true);
 		while (deck.isPlayable()) {
 			
-			if (!shouldRender) {
-				//setCardsToGui();
-				
-				shouldRender = true;
-			}
-			
 			System.out.println("Cards on the table: "+cardsOnTheTable);
-			
 			
 			while (cardsOnTheTable < 2) {
 				
@@ -72,10 +59,9 @@ public class Gameboard {
 						gui.appendText("\n You are giving! Enemy card on table: "+ enemyCardOnTable);
 						System.out.println("---------------------------------------------------------------------------------------");
 					}
-					waitForPlayerCard();
-					//String playedCard = scn.nextLine();
-					//checkPlayerInput(playedCard);
 					
+					waitForPlayerCard();
+
 					if(!waiting) {
 						System.out.println(playerCardOnTable);
 						System.out.println("---------------------------------------------------------------------------------------");
@@ -121,10 +107,8 @@ public class Gameboard {
 				}
 			}
 			
-			
-			
 			evaluateTurn(enemyCardOnTable, playerCardOnTable);
-		
+			
 		}
 	}
 
@@ -145,8 +129,6 @@ public class Gameboard {
 		for (int i = 0; i < 5; i++) {
 			player.addToHand(deck.dealCard());
 		}
-		
-		
 	}
 	
 	public void randomStart() {
@@ -159,12 +141,11 @@ public class Gameboard {
 		else {
 			isPlayersTurn = false;
 			isEnemyGiving = false;
-		}
-			
-		
+		}	
 	}
 
 	public void checkPlayerInput(String inp) {
+		//This method should be used only if GUI is not in use.
 
 		String suit = inp.substring(0,1);
 		int number;
@@ -228,7 +209,6 @@ public class Gameboard {
 		System.out.println("You played: "+playerCard+" Enemy played: "+enemyCard);
 		gui.appendText("\n You played: "+playerCard+" Enemy played: "+enemyCard);
 		System.out.println("---------------------------------------------------------------------------------------");
-		
 		
 		if (isEnemyGiving) {
 			if (enemyCard.getSuit() == playerCard.getSuit()) {
@@ -328,7 +308,6 @@ public class Gameboard {
 	}
 	
 	public static void playCard(Card card) {
-		//System.out.println("FAST");
 		isPlayersTurn = false;
 		cardsOnTheTable++;
 		playerCardOnTable = card;
@@ -337,7 +316,6 @@ public class Gameboard {
 	}
 	
 	public void waitForPlayerCard() {
-		
 		System.out.println("waiting for card");
 		while (waiting) {
 			try {

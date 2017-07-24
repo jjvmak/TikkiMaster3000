@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 
 public class GUI {
 	
-	private JFrame frame;
+	public JFrame frame;
 
 	ImageHandler imageHandler = new ImageHandler();
 	
@@ -45,9 +45,8 @@ public class GUI {
 	 */
 	public GUI() {
 
-
-
 		initialize();
+		
 
 		cardButtons.add(card1);
 		cardButtons.add(card2);
@@ -124,12 +123,12 @@ public class GUI {
 				setPlayerCardLabel(playerHand.get(4));
 			}
 		});
+		
 		card5.setBounds(276, 283, 59, 79);
 		panel.add(card5);
 
 		scrollPane = new JScrollPane();
 
-		
 		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
 			public void adjustmentValueChanged(AdjustmentEvent e) {  
 				e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
@@ -169,46 +168,47 @@ public class GUI {
 		playerCardLabel.setBounds(0, 0, 59, 79);
 		playerCardPane.add(playerCardLabel);
 		
-		
-		
-
-		frame.setVisible(true);
+	
 		
 	}
 
 	public void setCardNames(ArrayList<Card> cards) {
+		
 		for (int i = 0; i < cards.size(); i++) {
-			//String name = cards.get(i).toString();
-			//cardButtons.get(i).setText(name);
-			
+		
 			String suit =cards.get(i).getSuit().toString().toLowerCase();
 			int value = cards.get(i).getValue();
 			String parsed = value + "_of_" + suit+"s.png";
 			cardButtons.get(i).setIcon(imageHandler.getImage(parsed));
 			
-
 		}
 	}
 
 	public void setPlayerHand(Card card) {
+		
 		playerHand.add(card);
 		System.out.println("PLAYER HAND IN GUI: "+playerHand);
+		
 	}
-
+	
 	public void setAllActive() {
+		
 		for (int i = 0; i < cardButtons.size(); i++) {
 			cardButtons.get(i).setEnabled(true);
+			
 		}
 	}
 
 	public void setAllInactive() {
+		
 		for (int i = 0; i < cardButtons.size(); i++) {
 			cardButtons.get(i).setEnabled(true);
+			
 		}
 	}
 
 	public void appendText(String s) {
-
+		
 		textPane.append(s);
 
 	}
@@ -223,9 +223,11 @@ public class GUI {
 	}
 	
 	public void setEnemyCardLabel(Card card) {
+		
 		String suit = card.getSuit().toString().toLowerCase();
 		int value = card.getValue();
 		String parsed = value + "_of_" + suit+"s.png";
 		enemyCardLabel.setIcon(imageHandler.getImage(parsed));
+		
 	}
 }
