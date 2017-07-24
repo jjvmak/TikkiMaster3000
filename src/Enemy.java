@@ -95,19 +95,6 @@ public class Enemy extends Player {
 		int clubsLeft = 0;
 		int spadesLeft = 0;
 		
-		int heartsInHand = 0;
-		int diamondsInHand = 0;
-		int clubsInHand = 0;
-		int spadesInHand = 0;
-		
-		for (int j = 0; j < this.tempHand.size(); j++) {
-			String suitStr = this.tempHand.get(j).getSuit().toString().toLowerCase();
-			if (suitStr.equals("heart")) heartsInHand++;
-			if (suitStr.equals("club")) clubsInHand++;
-			if (suitStr.equals("diamond")) diamondsInHand++;
-			if (suitStr.equals("spade")) spadesInHand++;
-		}
-
 
 		for (int i = 0; i < this.cardsLeftInDeck.size(); i++) {
 
@@ -119,23 +106,15 @@ public class Enemy extends Player {
 			if (suitStr.equals("spade")) spadesLeft++;
 		}
 		
-		int heartsP = heartsLeft - heartsInHand;
-		int diamondsP = diamondsLeft - diamondsInHand;
-		int clubsP = clubsLeft - clubsInHand;
-		int spadesP = spadesLeft - spadesInHand;
+		
 
 		String p = "Enemy hand:"+hand+
 				   "\n"+
 				   "\nHearts: "+heartsLeft+
 				   "\nDiamonds: "+diamondsLeft+
 				   "\nClubs: "+clubsLeft+
-				   "\nSpades: "+spadesLeft+
-				   "\n"+
-				   "\nHearts: "+heartsP+
-				   "\nDiamonds: "+diamondsP+
-				   "\nClubs: "+clubsP+
-				   "\nSpades: "+spadesP;
-		//String p = cardsLeftInDeck.toString();
+				   "\nSpades: "+spadesLeft;
+			
 		return p;
 	}
 
