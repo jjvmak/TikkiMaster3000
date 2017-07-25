@@ -5,12 +5,6 @@ import java.util.List;
 public class Enemy extends Player {
 
 	ArrayList<Card> cardsLeftInDeck = new ArrayList<Card>();
-
-//	private int heartsLeft = 0;
-//	private int diamondsLeft = 0;
-//	private int clubsLeft = 0;
-//	private int spadesLeft = 0;
-	
 	ArrayList<Card> tempHand = new ArrayList<Card>();
 
 	public Card playCardTaking() {
@@ -20,52 +14,46 @@ public class Enemy extends Player {
 	}
 
 	public Card playCardGivin(Card card) {
-		//System.out.println("Analyzing..............................");
+		
 		ArrayList<Card> tempHand = new ArrayList<>();
 
 		for (int i = 0; i < hand.size(); i++) {
-			//System.out.println("Looking for: "+card.getSuit());
+		
 			if (card.getSuit() == hand.get(i).getSuit()) {
-				//System.out.println("Card matching suit: "+hand.get(i).getSuit());
 				tempHand.add(hand.get(i));
+				
 			}
 		}
 
 		if (tempHand.size() >= 1) {
-
 			sort(tempHand);
-			//System.out.println("Enemy tempHand: "+tempHand);
-
+			
 			for (int j = 0; j < tempHand.size(); j++) {
 
 				if (tempHand.get(j).getValue() > card.getValue()) {
-					//System.out.println("Enemy has larger same suit!");
 					Card tmp = tempHand.get(j);
-					//System.out.println("Enemy playing: "+tmp);
 					removeCard(tmp);
 					return tmp;
+					
 				}
 			}
-			//System.out.println("Enemy has smaller same suit!");
 			Card tmp = tempHand.get(0);
 			removeCard(tempHand.get(0));
-			//System.out.println("Enemy playing" +tmp);
 			return tmp;
 		}
 
 		else {
 			Card tmp = hand.get(0);
-			//System.out.println("Enemy does not have same suit, playing: "+tmp);
 			hand.remove(0);
 			return tmp;
+			
 		}
 	}
 
 	public void initLeftInDeck(Deck deck) {
 		cardsLeftInDeck = deck.deck;
 		removeOwnHandFromLeftInDeck();
-		//System.out.println("CALCULATING CARDS INITILIZED");
-		//System.out.println("Possible cards: "+cardsLeftInDeck.size());
+		
 	}
 
 	public void removeFromLeftInDeck(Card card) {
@@ -75,17 +63,13 @@ public class Enemy extends Player {
 				cardsLeftInDeck.remove(i);
 
 			}
-
-
-
 		}
-		//System.out.println("Possible cards: "+cardsLeftInDeck.size());
 	}
 
 	public void removeOwnHandFromLeftInDeck() {
 		for (int i = 0; i < hand.size(); i++) {
 			removeFromLeftInDeck(hand.get(i));
-			//System.out.println("REMOVING: "+hand.get(i));
+			
 		}
 	}
 
@@ -95,7 +79,6 @@ public class Enemy extends Player {
 		int clubsLeft = 0;
 		int spadesLeft = 0;
 		
-
 		for (int i = 0; i < this.cardsLeftInDeck.size(); i++) {
 
 			String suitStr = this.cardsLeftInDeck.get(i).getSuit().toString().toLowerCase();
@@ -106,8 +89,6 @@ public class Enemy extends Player {
 			if (suitStr.equals("spade")) spadesLeft++;
 		}
 		
-		
-
 		String p = "Enemy hand:"+hand+
 				   "\n"+
 				   "\nHearts: "+heartsLeft+
@@ -118,11 +99,8 @@ public class Enemy extends Player {
 		return p;
 	}
 
-
 	public void makeTempHand() {
 		tempHand = new ArrayList<>();
 		tempHand = hand;
 	}
-
-
 }
