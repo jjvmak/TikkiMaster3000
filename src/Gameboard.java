@@ -6,7 +6,7 @@ public class Gameboard {
 	GUI gui = new GUI();
 
 	static Player player = new Player();
-	Enemy enemy = new Enemy();
+	static Enemy enemy = new Enemy();
 	Deck deck = new Deck();
 
 	static boolean isPlayersTurn = true;
@@ -31,6 +31,7 @@ public class Gameboard {
 	public void gameLoop() {
 
 		initDeck();
+		enemy.initLeftInDeck(deck);
 		dealCards();
 		randomStart();
 		gui = new GUI();
@@ -40,19 +41,16 @@ public class Gameboard {
 		gui.leftInTheDeck.setText("Cards left in the deck: "+deck.deck.size());
 
 		while (shouldPlay) {
-			//gui.appendText(enemy.possibilities());
+			gui.appendText(enemy.possibilitiesss());
 			setTakerLabels();
 			gui.leftInTheDeck.setText("Cards left in the deck: "+deck.deck.size());
 
 			while (cardsOnTheTable < 2) {
 				
 				if (isPlayersTurn) {
-					//gui.appendText("\n Players turn!");
 					waitForPlayerCard();
 
 					if(!waiting) {
-						enemy.removeFromLeftInDeck(playerCardOnTable);
-						//gui.appendText(enemy.possibilities());
 						isPlayersTurn = false;
 						cardsOnTheTable++;
 						waiting = true;
@@ -61,12 +59,10 @@ public class Gameboard {
 				}
 
 				if (!isPlayersTurn && !isEnemyCardOnTable) {
-
+					
 					if (!isEnemyGiving) {
-						//gui.appendText("\n Enemy is taking!");
 						enemyCardOnTable = enemy.playCardTaking();
 						gui.setEnemyCardLabel(enemyCardOnTable);
-						//gui.appendText("\n enemy card: " + enemyCardOnTable);
 						isPlayersTurn = true;
 						isEnemyCardOnTable = true;
 						cardsOnTheTable++;
@@ -74,10 +70,8 @@ public class Gameboard {
 					}
 
 					if (isEnemyGiving) {
-						//gui.appendText("\n Enemy is giving!");
 						enemyCardOnTable = enemy.playCardGivin(playerCardOnTable);
 						gui.setEnemyCardLabel(enemyCardOnTable);
-						//gui.appendText("\n Enemy card: " + enemyCardOnTable);
 						cardsOnTheTable++;
 						isEnemyCardOnTable = true;
 					}
@@ -89,24 +83,30 @@ public class Gameboard {
 	}
 
 	public void initDeck() {
+		
 		deck.initDeck();
 		deck.shuffleDeck();
 		roundNumber = 1;
 		shouldPlay = true;
+		
 	}
 
 	public void dealCards() {
 
 		for (int j = 0; j < 5; j++) {
-			enemy.addToHand(deck.dealCard());
+			Card tmp = deck.dealCard();
+			enemy.removeFromLeftInDeck(tmp);
+			enemy.addToHand(tmp);
+			
 
 		}
-		enemy.makeTempHand();
-		enemy.initLeftInDeck(deck);
-
+	
 		for (int i = 0; i < 5; i++) {
 			player.addToHand(deck.dealCard());
+			
 		}
+		
+		enemy.resetPredictCurrentPlayerHand();
 	}
 
 	public void randomStart() {
@@ -123,15 +123,10 @@ public class Gameboard {
 			isEnemyGiving = false;
 
 		}	
-
-
 	}
 
-
-
 	public void evaluateTurn(Card enemyCard, Card playerCard) {
-		gui.appendText(enemy.possibilities());
-		
+		gui.appendText(enemy.possibilitiesss());
 		if (roundNumber == 5) {
 			deck.setIsPlayable(false);
 			roundNumber++;
@@ -140,23 +135,18 @@ public class Gameboard {
 
 		turnNumber++;
 		isEnemyCardOnTable = false;
-		//gui.appendText("\n Evaluating turn number: "+turnNumber);
-		enemy.removeFromLeftInDeck(playerCard);
-		//gui.appendText("\n You played: "+playerCard+" Enemy played: "+enemyCard);
-
+	
 		if (isEnemyGiving) {
 			if (enemyCard.getSuit() == playerCard.getSuit()) {
 				if (enemyCard.getValue() > playerCard.getValue()) {
 					isPlayersTurn = false;
 					isEnemyGiving = false;
-					//gui.appendText("\n Enemy wins turn!");
 					cardsOnTheTable = 0;
 					
 				}
 				else {
 					isPlayersTurn = true;
 					isEnemyGiving = true;
-					//gui.appendText("\n You win turn!");
 					cardsOnTheTable = 0;
 					
 				}
@@ -165,7 +155,6 @@ public class Gameboard {
 				isPlayersTurn = true;
 				isEnemyGiving = true;
 				System.out.println("You win turn!");
-				//gui.appendText("\n You win turn!");
 				cardsOnTheTable = 0;
 				
 			}
@@ -176,7 +165,6 @@ public class Gameboard {
 				if (enemyCard.getValue() < playerCard.getValue()) {
 					isPlayersTurn = true;
 					isEnemyGiving = true;
-					//gui.appendText("\n You win turn!");
 					cardsOnTheTable = 0;
 					
 				}
@@ -184,15 +172,14 @@ public class Gameboard {
 					isPlayersTurn = false;
 					isEnemyGiving = false;
 					System.out.println("Enemy wins turn!");
-					//gui.appendText("\n Enemy wins turn!");
 					cardsOnTheTable = 0;
 					
 				}
 			}
 			else {
+				enemy.predictCurrentPlayerHand(enemyCard);
 				isPlayersTurn = false;
 				isEnemyGiving = false;
-				//gui.appendText("\n Enemy wins turn!");
 				cardsOnTheTable = 0;
 				
 			}
@@ -203,8 +190,6 @@ public class Gameboard {
 			if(isPlayersTurn) {
 				playerScore++;
 				turnNumber = 0;
-				//gui.appendText("\n PLAYER WINS!");
-				//gui.appendText("\n PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 				gui.scoreLabel.setText("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 
 				if (roundNumber < 5 && deck.isPlayable()) {
@@ -214,6 +199,11 @@ public class Gameboard {
 					gui.setAllActive();
 					
 				}
+				
+				else {
+					deck.deck.removeAll(deck.deck);
+					gameLoop();
+				}
 
 
 			}
@@ -221,8 +211,6 @@ public class Gameboard {
 			else {
 				enemyScore++;
 				turnNumber = 0;
-				//gui.appendText("\n ENEMY WINS!");
-				//gui.appendText("\n PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 				gui.scoreLabel.setText("PLAYER SCORE: "+playerScore+" ENEMY SCORE: "+enemyScore);
 		
 				if (roundNumber < 5 && deck.isPlayable()) {
@@ -232,12 +220,17 @@ public class Gameboard {
 					gui.setAllActive();
 					
 				}
+				
+				else {
+					deck.deck.removeAll(deck.deck);
+					gameLoop();
+				}
+				
+				
 			}
 			
 			roundNumber++;
 		}
-
-
 	}
 
 	public void setCardsToGui() {
@@ -260,6 +253,7 @@ public class Gameboard {
 		cardsOnTheTable++;
 		playerCardOnTable = card;
 		player.removeCard(playerCardOnTable);
+		enemy.removeFromLeftInDeck(playerCardOnTable);
 		waiting = false;
 
 	}
@@ -336,5 +330,4 @@ public class Gameboard {
 			playerCorrectInput = false;
 		}
 	}
-
 }
