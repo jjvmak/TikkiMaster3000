@@ -37,11 +37,11 @@ public class Enemy extends Player {
 		}
 		
 		sort(tempHand);
-		System.out.println("tmp hand" +tempHand);
+		//System.out.println("tmp hand" +tempHand);
 		
 		for (int j = 0; j < tempHand.size(); j++) {
 			if (tempHand.get(j).getSuit() == currentHighRisk) {
-				System.out.println("currentrisk "+currentHighRisk+" tmp hand suit: "+tempHand.get(j).getSuit());
+				//System.out.println("currentrisk "+currentHighRisk+" tmp hand suit: "+tempHand.get(j).getSuit());
 				Card tmp = tempHand.get(j);
 				System.out.println(tmp);
 				hand.remove(0);
@@ -158,7 +158,7 @@ public class Enemy extends Player {
 
 	public void predictCurrentPlayerHand(Card card) {
 		String suitStr = card.getSuit().toString().toLowerCase();
-		System.out.println("PREDICT");
+		//System.out.println("PREDICT");
 
 		if (suitStr.equals("heart")) isHeartInPlayersHand = false;
 		if (suitStr.equals("club")) isClubInPlayersHand = false;

@@ -126,6 +126,9 @@ public class Gameboard {
 	}
 
 	public void evaluateTurn(Card enemyCard, Card playerCard) {
+		turnNumber++;
+
+		System.out.println("turn: "+turnNumber+" enemycard: "+enemyCard+" playercard: "+playerCard);
 		gui.appendText(enemy.possibilitiesss());
 		if (roundNumber == 5) {
 			deck.setIsPlayable(false);
@@ -133,7 +136,6 @@ public class Gameboard {
 			
 		}
 
-		turnNumber++;
 		isEnemyCardOnTable = false;
 	
 		if (isEnemyGiving) {
@@ -142,12 +144,15 @@ public class Gameboard {
 					isPlayersTurn = false;
 					isEnemyGiving = false;
 					cardsOnTheTable = 0;
+					System.out.println("enemy wins!");
 					
 				}
 				else {
 					isPlayersTurn = true;
 					isEnemyGiving = true;
 					cardsOnTheTable = 0;
+					System.out.println("You win turn!");
+
 					
 				}
 			}
@@ -166,6 +171,7 @@ public class Gameboard {
 					isPlayersTurn = true;
 					isEnemyGiving = true;
 					cardsOnTheTable = 0;
+					System.out.println("you win turn!");
 					
 				}
 				else {
@@ -181,6 +187,8 @@ public class Gameboard {
 				isPlayersTurn = false;
 				isEnemyGiving = false;
 				cardsOnTheTable = 0;
+				System.out.println("Enemy wins turn!");
+				
 				
 			}
 		}

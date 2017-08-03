@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 
-import com.sun.javafx.PlatformUtil;
+
 
 import javax.swing.JScrollPane;
 import java.awt.Color;
@@ -214,7 +214,7 @@ public class GUI {
 	public void setPlayerHand(Card card) {
 		
 		playerHand.add(card);
-		System.out.println("PLAYER HAND IN GUI: "+playerHand);
+		//System.out.println("PLAYER HAND IN GUI: "+playerHand);
 		
 	}
 	
