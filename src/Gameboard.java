@@ -130,6 +130,8 @@ public class Gameboard {
 
 		System.out.println("turn: "+turnNumber+" enemycard: "+enemyCard+" playercard: "+playerCard);
 		gui.appendText(enemy.possibilitiesss());
+		
+		
 		if (roundNumber == 5) {
 			deck.setIsPlayable(false);
 			roundNumber++;
@@ -239,6 +241,9 @@ public class Gameboard {
 			
 			roundNumber++;
 		}
+		
+		playerCardOnTable = null;
+		enemyCardOnTable = null;
 	}
 
 	public void setCardsToGui() {
@@ -331,6 +336,7 @@ public class Gameboard {
 		if (isInit && number > 0 && number < 14 && player.isInHand(tempCard)) {
 			playerCorrectInput = true;
 			playerCardOnTable = new Card(number, eSuit);
+			
 			player.removeCard(playerCardOnTable);
 		}
 

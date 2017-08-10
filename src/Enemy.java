@@ -43,8 +43,9 @@ public class Enemy extends Player {
 			if (tempHand.get(j).getSuit() == currentHighRisk) {
 				//System.out.println("currentrisk "+currentHighRisk+" tmp hand suit: "+tempHand.get(j).getSuit());
 				Card tmp = tempHand.get(j);
-				System.out.println(tmp);
-				hand.remove(0);
+				//System.out.println(tmp);
+				//hand.remove(0);
+				removeCard(tmp);
 				//enemyLastCard = tmp;
 				return tmp;
 			}
@@ -52,7 +53,8 @@ public class Enemy extends Player {
 		
 
 		Card tmp = tempHand.get(0);
-		hand.remove(tmp);
+		//hand.remove(tmp);
+		removeCard(tmp);
 		//enemyLastCard = tmp;
 		return tmp;
 	}
@@ -88,7 +90,8 @@ public class Enemy extends Player {
 
 		else {
 			Card tmp = playCardTaking();
-			hand.remove(tmp);
+			//hand.remove(tmp);
+			removeCard(tmp);
 			return tmp;
 
 		}
