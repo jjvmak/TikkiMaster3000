@@ -35,7 +35,6 @@ public class Player {
 	}
 	
 	public void sort(ArrayList<Card> tmp) {
-		System.out.println("sorting");
 		for (int i = 0; i < tmp.size() - 1; i++) {
 			int index = i;
 			for (int j = i + 1; j < tmp.size(); j++) {

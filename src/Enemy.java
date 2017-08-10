@@ -15,8 +15,6 @@ public class Enemy extends Player {
 
 
 	//VARIABLES FOR PREDICTING PLAYERS CURRENT HAND
-	private Card playerLastCard; 
-	private Card enemyLastCard;
 	private boolean isSpadeInPlayersHand = true;
 	private boolean isHeartInPlayersHand = true;
 	private boolean isClubInPlayersHand = true;
@@ -37,25 +35,17 @@ public class Enemy extends Player {
 		}
 		
 		sort(tempHand);
-		//System.out.println("tmp hand" +tempHand);
 		
 		for (int j = 0; j < tempHand.size(); j++) {
 			if (tempHand.get(j).getSuit() == currentHighRisk) {
-				//System.out.println("currentrisk "+currentHighRisk+" tmp hand suit: "+tempHand.get(j).getSuit());
 				Card tmp = tempHand.get(j);
-				//System.out.println(tmp);
-				//hand.remove(0);
 				removeCard(tmp);
-				//enemyLastCard = tmp;
 				return tmp;
 			}
 		}
-		
 
 		Card tmp = tempHand.get(0);
-		//hand.remove(tmp);
 		removeCard(tmp);
-		//enemyLastCard = tmp;
 		return tmp;
 	}
 
@@ -83,6 +73,7 @@ public class Enemy extends Player {
 
 				}
 			}
+			
 			Card tmp = tempHand.get(0);
 			removeCard(tempHand.get(0));
 			return tmp;
@@ -90,7 +81,6 @@ public class Enemy extends Player {
 
 		else {
 			Card tmp = playCardTaking();
-			//hand.remove(tmp);
 			removeCard(tmp);
 			return tmp;
 
@@ -155,14 +145,10 @@ public class Enemy extends Player {
 		tempHand = hand;
 	}
 
-	public void setPlayerLastCard(Card card) {
-		playerLastCard = card;
-	}
-
 	public void predictCurrentPlayerHand(Card card) {
+		
 		String suitStr = card.getSuit().toString().toLowerCase();
-		//System.out.println("PREDICT");
-
+		
 		if (suitStr.equals("heart")) isHeartInPlayersHand = false;
 		if (suitStr.equals("club")) isClubInPlayersHand = false;
 		if (suitStr.equals("diamond")) isDiamondInPlayersHand = false;
@@ -172,9 +158,7 @@ public class Enemy extends Player {
 		if (clubsLeft == 0) isClubInPlayersHand = false;
 		if (diamondsLeft == 0) isDiamondInPlayersHand = false;
 		if (spadesLeft == 0) isSpadeInPlayersHand = false;
-
-
-
+		
 	}
 
 	public void resetPredictCurrentPlayerHand() {
