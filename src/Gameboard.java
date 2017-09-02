@@ -77,6 +77,8 @@ public class Gameboard {
 					}
 				}
 			}
+			
+		
 
 			evaluateTurn(enemyCardOnTable, playerCardOnTable);
 		} 
